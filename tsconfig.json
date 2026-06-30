@@ -1,4 +1,8 @@
 {
   "files": [],
-  "references": [{ "path": "./packages/core" }, { "path": "./packages/ink" }]
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/ink" },
+    { "path": "./packages/lessons" }
+  ]
 }

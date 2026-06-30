@@ -1,0 +1,6 @@
+{
+  "content.math.add.title": "Suma",
+  "math.add.prompt": "¿Cuánto es {a} + {b}?",
+  "ui.feedback": "{outcome, select, correct {¡Correcto!} other {No exactamente.}}",
+  "ui.score": "{name}: {score, plural, one {# punto} other {# puntos}}"
+}

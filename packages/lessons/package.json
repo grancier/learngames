@@ -1,0 +1,23 @@
+{
+  "name": "@learn-engine/lessons",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "intl-messageformat": "^10.7.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "fast-check": "^3.22.0"
+  }
+}

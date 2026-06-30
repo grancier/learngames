@@ -5,7 +5,9 @@
       "**/coverage/**",
       "**/dist/**",
       "**/*.tsbuildinfo",
-      "node_modules/**"
+      "**/.saves/**",
+      "node_modules/**",
+      ".claude/**"
     ]
   },
   "formatter": {

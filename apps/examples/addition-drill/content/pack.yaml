@@ -1,0 +1,10 @@
+id: addition-drill
+schemaVersion: 1
+defaultLocale: en
+locales: [en, es]
+skills:
+  - id: math.add
+    title: content.math.add.title
+    prereqs: []
+    minLevel: 0
+    maxLevel: 10
