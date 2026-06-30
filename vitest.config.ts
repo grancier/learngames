@@ -22,13 +22,16 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["packages/**/*.test.{ts,tsx}"],
+    include: ["packages/**/*.test.{ts,tsx}", "apps/**/*.test.{ts,tsx}"],
     environment: "node",
     globals: false,
     coverage: {
       provider: "v8",
-      include: ["packages/*/src/**/*.{ts,tsx}"],
-      exclude: ["packages/*/src/**/*.test.{ts,tsx}"],
+      include: [
+        "packages/*/src/**/*.{ts,tsx}",
+        "apps/examples/addition-drill/src/{game,source}.ts",
+      ],
+      exclude: ["packages/*/src/**/*.test.{ts,tsx}", "apps/**/*.test.{ts,tsx}"],
       thresholds: {
         lines: 100,
         functions: 100,

@@ -29,9 +29,15 @@ importers:
 
   apps/examples/addition-drill:
     dependencies:
+      '@learn-engine/core':
+        specifier: workspace:*
+        version: link:../../../packages/core
       '@learn-engine/lessons':
         specifier: workspace:*
         version: link:../../../packages/lessons
+      '@learn-engine/runtime':
+        specifier: workspace:*
+        version: link:../../../packages/runtime
       yaml:
         specifier: ^2.6.0
         version: 2.9.0
