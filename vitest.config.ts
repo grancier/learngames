@@ -15,6 +15,10 @@ export default defineConfig({
         "./packages/lessons/src/index.ts",
         import.meta.url,
       ).pathname,
+      "@learn-engine/runtime": new URL(
+        "./packages/runtime/src/index.ts",
+        import.meta.url,
+      ).pathname,
     },
   },
   test: {

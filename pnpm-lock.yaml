@@ -88,6 +88,15 @@ importers:
         specifier: ^3.22.0
         version: 3.23.2
 
+  packages/runtime:
+    dependencies:
+      '@learn-engine/core':
+        specifier: workspace:*
+        version: link:../core
+      '@learn-engine/lessons':
+        specifier: workspace:*
+        version: link:../lessons
+
 packages:
 
   '@alcalzone/ansi-tokenize@0.3.0':
