@@ -4,7 +4,9 @@
     "rootDir": "src",
     "outDir": "dist",
     "composite": true,
+    "jsx": "react-jsx",
     "types": ["node", "vitest"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "../core" }]
 }

@@ -1,4 +1,4 @@
-.PHONY: build typecheck test lint verify
+.PHONY: build typecheck test test-coverage lint harness verify
 
 typecheck:
 	pnpm typecheck
@@ -9,7 +9,13 @@ build:
 test:
 	pnpm test
 
+test-coverage:
+	pnpm test:coverage
+
 lint:
 	pnpm lint
 
-verify: typecheck build test
+harness:
+	pnpm harness
+
+verify: typecheck build test test-coverage lint harness
