@@ -11,6 +11,10 @@ export default defineConfig({
         "./packages/ink/src/index.ts",
         import.meta.url,
       ).pathname,
+      "@learn-engine/lessons": new URL(
+        "./packages/lessons/src/index.ts",
+        import.meta.url,
+      ).pathname,
     },
   },
   test: {

@@ -1,0 +1,6 @@
+{
+  "content.math.add.title": "Addition",
+  "math.add.prompt": "What is {a} + {b}?",
+  "ui.feedback": "{outcome, select, correct {Correct!} other {Not quite.}}",
+  "ui.score": "{name}: {score, plural, one {# point} other {# points}}"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@learn-engine/example-addition",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "play": "tsx src/play.ts"
+  },
+  "dependencies": {
+    "@learn-engine/lessons": "workspace:*",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
