@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bgSgr, fgSgr, rgb, toHex } from "./color.js";
+import { bgSgr, colorEq, fgSgr, rgb, toHex } from "./color.js";
 
 describe("color model", () => {
   it("clamps and rounds RGB channels into byte range", () => {
@@ -21,5 +21,13 @@ describe("color model", () => {
     expect(bgSgr(purple)).toBe("48;2;128;64;255");
     expect(fgSgr("default")).toBe("39");
     expect(bgSgr("default")).toBe("49");
+  });
+
+  it("compares default, inherited, and RGB colors structurally", () => {
+    expect(colorEq("default", "default")).toBe(true);
+    expect(colorEq(undefined, rgb(1, 2, 3))).toBe(false);
+    expect(colorEq("default", rgb(1, 2, 3))).toBe(false);
+    expect(colorEq(rgb(1, 2, 3), rgb(1, 2, 3))).toBe(true);
+    expect(colorEq(rgb(1, 2, 3), rgb(1, 2, 4))).toBe(false);
   });
 });

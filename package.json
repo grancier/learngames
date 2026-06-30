@@ -10,12 +10,15 @@
     "build": "pnpm -r --filter './packages/*' build",
     "typecheck": "tsc -b --pretty",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "harness": "pnpm --filter @learn-engine/harness start",
     "lint": "biome check ."
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
+    "@types/node": "^20.19.0",
+    "@vitest/coverage-v8": "^2.1.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
