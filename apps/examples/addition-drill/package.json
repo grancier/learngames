@@ -4,10 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "tsx src/play.ts",
     "play": "tsx src/play.ts"
   },
   "dependencies": {
+    "@learn-engine/core": "workspace:*",
+    "@learn-engine/intents": "workspace:*",
     "@learn-engine/lessons": "workspace:*",
+    "@learn-engine/runtime": "workspace:*",
     "yaml": "^2.6.0"
   },
   "devDependencies": {

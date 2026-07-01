@@ -11,20 +11,31 @@ export default defineConfig({
         "./packages/ink/src/index.ts",
         import.meta.url,
       ).pathname,
+      "@learn-engine/intents": new URL(
+        "./packages/intents/src/index.ts",
+        import.meta.url,
+      ).pathname,
       "@learn-engine/lessons": new URL(
         "./packages/lessons/src/index.ts",
+        import.meta.url,
+      ).pathname,
+      "@learn-engine/runtime": new URL(
+        "./packages/runtime/src/index.ts",
         import.meta.url,
       ).pathname,
     },
   },
   test: {
-    include: ["packages/**/*.test.{ts,tsx}"],
+    include: ["packages/**/*.test.{ts,tsx}", "apps/**/*.test.{ts,tsx}"],
     environment: "node",
     globals: false,
     coverage: {
       provider: "v8",
-      include: ["packages/*/src/**/*.{ts,tsx}"],
-      exclude: ["packages/*/src/**/*.test.{ts,tsx}"],
+      include: [
+        "packages/*/src/**/*.{ts,tsx}",
+        "apps/examples/addition-drill/src/{game,source}.ts",
+      ],
+      exclude: ["packages/*/src/**/*.test.{ts,tsx}", "apps/**/*.test.{ts,tsx}"],
       thresholds: {
         lines: 100,
         functions: 100,

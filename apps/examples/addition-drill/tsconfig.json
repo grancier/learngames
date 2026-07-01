@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "composite": true,
+    "types": ["node", "vitest"]
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../../packages/core" },
+    { "path": "../../../packages/intents" },
+    { "path": "../../../packages/lessons" },
+    { "path": "../../../packages/runtime" }
+  ]
+}

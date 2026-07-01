@@ -29,9 +29,18 @@ importers:
 
   apps/examples/addition-drill:
     dependencies:
+      '@learn-engine/core':
+        specifier: workspace:*
+        version: link:../../../packages/core
+      '@learn-engine/intents':
+        specifier: workspace:*
+        version: link:../../../packages/intents
       '@learn-engine/lessons':
         specifier: workspace:*
         version: link:../../../packages/lessons
+      '@learn-engine/runtime':
+        specifier: workspace:*
+        version: link:../../../packages/runtime
       yaml:
         specifier: ^2.6.0
         version: 2.9.0
@@ -75,6 +84,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.7
 
+  packages/intents:
+    dependencies:
+      '@learn-engine/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/lessons:
     dependencies:
       intl-messageformat:
@@ -87,6 +102,15 @@ importers:
       fast-check:
         specifier: ^3.22.0
         version: 3.23.2
+
+  packages/runtime:
+    dependencies:
+      '@learn-engine/core':
+        specifier: workspace:*
+        version: link:../core
+      '@learn-engine/lessons':
+        specifier: workspace:*
+        version: link:../lessons
 
 packages:
 

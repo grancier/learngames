@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "example:addition": "pnpm --filter @learn-engine/example-addition play",
     "harness": "pnpm --filter @learn-engine/harness start",
     "lint": "biome check ."
   },
