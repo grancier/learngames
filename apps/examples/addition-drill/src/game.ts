@@ -1,5 +1,5 @@
-import { BORDERS, Surface, rgb } from "@learn-engine/core";
-import { renderBanner } from "@learn-engine/intents";
+import { Surface, rgb } from "@learn-engine/core";
+import { drawInputField, renderBanner } from "@learn-engine/intents";
 import type {
   InputFrame,
   LessonVerdict,
@@ -88,10 +88,10 @@ export function createAdditionLesson(
     step(
       state: AdditionGameState,
       input: InputFrame,
-      _ctx: { readonly tick: number },
+      ctx: { readonly tick: number },
     ): StepResult<AdditionGameState> {
       const next = advanceAdditionState(state, input);
-      const surface = renderAdditionState(next, dimensions);
+      const surface = renderAdditionState(next, dimensions, ctx.tick);
       const verdict = verdictFor(next);
       if (verdict === undefined) return { state: next, surface };
       return {
@@ -147,19 +147,21 @@ function advanceAdditionState(
 function renderAdditionState(
   state: AdditionGameState,
   dimensions: TerminalDimensions,
+  tick: number,
 ): Surface {
   switch (state.status) {
     case "win":
     case "lose":
       return renderOutcomeBanner(state.status, dimensions);
     case "question":
-      return renderQuestion(state, dimensions);
+      return renderQuestion(state, dimensions, tick);
   }
 }
 
 function renderQuestion(
   state: AdditionGameState,
   dimensions: TerminalDimensions,
+  tick: number,
 ): Surface {
   const surface = Surface.create(dimensions.columns, dimensions.rows, {
     char: " ",
@@ -167,18 +169,25 @@ function renderQuestion(
     bg: BG,
     bold: false,
   });
-  const fieldHeight = Math.max(3, Math.floor(dimensions.rows * 0.25));
+  const fieldHeight = Math.max(5, Math.floor(dimensions.rows * 0.25));
   const y = Math.max(0, dimensions.rows - fieldHeight);
-  surface.drawBox(
+  drawInputField(
+    surface,
     { x: 0, y, width: dimensions.columns, height: fieldHeight },
-    BORDERS.bold,
-    { fg: BORDER, bg: BG, bold: true },
-  );
-  surface.drawText(
-    2,
-    y + Math.floor(fieldHeight / 2),
-    `${formatAdditionPrompt(state.problem)}  ${state.answerText}`,
-    { fg: INK, bg: BG, bold: true },
+    {
+      label: formatAdditionPrompt(state.problem),
+      value: state.answerText,
+      tick,
+    },
+    {
+      border: BORDER,
+      background: BG,
+      label: INK,
+      value: GREEN,
+      cursor: INK,
+      nested: true,
+      bold: true,
+    },
   );
   return surface;
 }
