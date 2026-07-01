@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@learn-engine/core": "workspace:*",
+    "@learn-engine/intents": "workspace:*",
     "@learn-engine/lessons": "workspace:*",
     "@learn-engine/runtime": "workspace:*",
     "yaml": "^2.6.0"

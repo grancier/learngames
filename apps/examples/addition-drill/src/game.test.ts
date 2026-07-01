@@ -1,11 +1,17 @@
-import { rasterizeToText, rgb } from "@learn-engine/core";
+import {
+  type Cell,
+  type ColorValue,
+  type Surface,
+  colorEq,
+  rasterizeToText,
+  rgb,
+} from "@learn-engine/core";
 import type { InputFrame, Key } from "@learn-engine/runtime";
 import { describe, expect, test } from "vitest";
 import {
   createAdditionLesson,
   createAdditionProblem,
   formatAdditionPrompt,
-  type renderOutcomeBanner,
 } from "./game.js";
 
 const insert = (text: string): InputFrame => ({
@@ -26,19 +32,24 @@ const emptyInput = (): InputFrame => ({
   text: [],
 });
 
-function occupied(surface: ReturnType<typeof renderOutcomeBanner>) {
-  const points: Array<{ x: number; y: number }> = [];
+/** Cells the banner actually painted (half-blocks over the blank background). */
+function occupied(surface: Surface): { cells: Cell[]; height: number } {
+  const cells: Cell[] = [];
+  const ys: number[] = [];
   for (let y = 0; y < surface.height; y++) {
     for (let x = 0; x < surface.width; x++) {
-      if (surface.get(x, y).char !== " ") points.push({ x, y });
+      const cell = surface.get(x, y);
+      if (cell.char !== " ") {
+        cells.push(cell);
+        ys.push(y);
+      }
     }
   }
-  const ys = points.map((p) => p.y);
-  return {
-    cells: points.map(({ x, y }) => surface.get(x, y)),
-    height: Math.max(...ys) - Math.min(...ys) + 1,
-  };
+  return { cells, height: Math.max(...ys) - Math.min(...ys) + 1 };
 }
+
+const has = (cells: readonly Cell[], color: ColorValue): boolean =>
+  cells.some((c) => colorEq(c.fg, color) || colorEq(c.bg, color));
 
 describe("addition example game", () => {
   test("uses the Rust example's 6+6 addition problem", () => {
@@ -48,27 +59,33 @@ describe("addition example game", () => {
     expect(formatAdditionPrompt(problem)).toBe("What is 6+6?");
   });
 
-  test("submitting the correct answer wins with a bold green YOU WIN!!! banner", () => {
+  test("a correct answer wins with a solid green YOU WIN!!! block banner", () => {
     const lesson = createAdditionLesson({ columns: 80, rows: 20 });
     let state = lesson.init();
     state = lesson.step(state, insert("12"), { tick: 1 }).state;
 
     const frame = lesson.step(state, submit, { tick: 2 });
     const banner = occupied(frame.surface);
-    const glyphs = new Set(banner.cells.map((cell) => cell.char));
 
     expect(frame.verdict).toBe("win");
     expect(lesson.score(frame.state)).toBe(10);
     expect(lesson.attempts(frame.state)).toBe(1);
-    expect(banner.height).toBe(17);
-    expect([...glyphs].sort()).toEqual(["!", "I", "N", "O", "U", "W", "Y"]);
-    for (const cell of banner.cells) {
-      expect(cell.bold).toBe(true);
-      expect(cell.fg).toEqual(rgb(80, 220, 60));
-    }
+
+    // Solid half-block glyphs — NOT letter text (the bug this replaced).
+    expect([...new Set(banner.cells.map((c) => c.char))]).toEqual(["▀"]);
+    for (const cell of banner.cells) expect(cell.bold).toBe(true);
+
+    // Green fill + black outline + gold drop-shadow, filling most of the height.
+    expect(has(banner.cells, rgb(90, 205, 85))).toBe(true);
+    expect(has(banner.cells, rgb(0, 0, 0))).toBe(true);
+    expect(has(banner.cells, rgb(250, 204, 60))).toBe(true);
+    expect(banner.height).toBeGreaterThanOrEqual(15);
+
+    // A further submit after winning is a no-op that stays won.
+    expect(lesson.step(frame.state, submit, { tick: 3 }).verdict).toBe("win");
   });
 
-  test("submitting an incorrect answer loses with a bold red X filling 85 percent of the console height", () => {
+  test("a wrong answer loses with a solid red X block banner and no shadow", () => {
     const lesson = createAdditionLesson({ columns: 80, rows: 20 });
     let state = lesson.init();
     state = lesson.step(state, insert("13"), { tick: 1 }).state;
@@ -79,12 +96,12 @@ describe("addition example game", () => {
     expect(frame.verdict).toBe("lose");
     expect(lesson.score(frame.state)).toBe(0);
     expect(lesson.attempts(frame.state)).toBe(1);
-    expect(banner.height).toBe(17);
-    for (const cell of banner.cells) {
-      expect(cell.char).toBe("X");
-      expect(cell.bold).toBe(true);
-      expect(cell.fg).toEqual(rgb(230, 40, 40));
-    }
+
+    expect([...new Set(banner.cells.map((c) => c.char))]).toEqual(["▀"]);
+    expect(has(banner.cells, rgb(230, 60, 55))).toBe(true); // red fill
+    expect(has(banner.cells, rgb(0, 0, 0))).toBe(true); // outline
+    expect(has(banner.cells, rgb(250, 204, 60))).toBe(false); // no shadow
+    expect(banner.height).toBeGreaterThanOrEqual(15);
   });
 
   test("the opening frame shows editable prompt state before submission", () => {

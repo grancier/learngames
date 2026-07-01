@@ -1,4 +1,5 @@
 import { BORDERS, Surface, rgb } from "@learn-engine/core";
+import { renderBanner } from "@learn-engine/intents";
 import type {
   InputFrame,
   LessonVerdict,
@@ -38,25 +39,13 @@ export interface AdditionGame {
 
 type BannerOutcome = Extract<AdditionStatus, "win" | "lose">;
 
-const BG = rgb(10, 14, 28);
+const BG = rgb(43, 47, 58);
 const BORDER = rgb(80, 200, 210);
 const INK = rgb(230, 240, 255);
-const RED = rgb(230, 40, 40);
-const GREEN = rgb(80, 220, 60);
-
-const FONT_HEIGHT = 7;
-const SPACE_GLYPH = ["   ", "   ", "   ", "   ", "   ", "   ", "   "] as const;
-const FONT: Record<string, readonly string[]> = {
-  "!": ["#", "#", "#", "#", "#", " ", "#"],
-  I: ["#####", "  #  ", "  #  ", "  #  ", "  #  ", "  #  ", "#####"],
-  N: ["#   #", "##  #", "# # #", "#  ##", "#   #", "#   #", "#   #"],
-  O: [" ### ", "#   #", "#   #", "#   #", "#   #", "#   #", " ### "],
-  U: ["#   #", "#   #", "#   #", "#   #", "#   #", "#   #", " ### "],
-  W: ["#   #", "#   #", "#   #", "# # #", "# # #", "## ##", "#   #"],
-  X: ["#   #", " # # ", "  #  ", "  #  ", "  #  ", " # # ", "#   #"],
-  Y: ["#   #", " # # ", "  #  ", "  #  ", "  #  ", "  #  ", "  #  "],
-  " ": SPACE_GLYPH,
-};
+const RED = rgb(230, 60, 55);
+const GREEN = rgb(90, 205, 85);
+const OUTLINE = rgb(0, 0, 0);
+const SHADOW = rgb(250, 204, 60);
 
 export function createAdditionProblem(): AdditionProblem {
   return { a: 6, b: 6, answer: 12 };
@@ -70,18 +59,18 @@ export function renderOutcomeBanner(
   outcome: BannerOutcome,
   dimensions: TerminalDimensions,
 ): Surface {
-  const surface = Surface.create(dimensions.columns, dimensions.rows, {
-    char: " ",
-    fg: INK,
-    bg: BG,
-    bold: false,
-  });
-  drawBannerText(
-    surface,
-    outcome === "win" ? "YOU WIN!!!" : "X",
-    outcome === "win" ? GREEN : RED,
-  );
-  return surface;
+  return outcome === "win"
+    ? renderBanner(dimensions.columns, dimensions.rows, "YOU\nWIN!!!", {
+        fill: GREEN,
+        background: BG,
+        outline: OUTLINE,
+        shadow: SHADOW,
+      })
+    : renderBanner(dimensions.columns, dimensions.rows, "X", {
+        fill: RED,
+        background: BG,
+        outline: OUTLINE,
+      });
 }
 
 export function createAdditionLesson(
@@ -205,49 +194,4 @@ function verdictFor(state: AdditionGameState): LessonVerdict | undefined {
   }
 }
 
-function drawBannerText(
-  surface: Surface,
-  text: string,
-  fg: typeof GREEN,
-): void {
-  const rows = composeTextRows(text);
-  const targetHeight = Math.max(1, Math.floor(surface.height * 0.85));
-  const targetWidth = Math.min(
-    surface.width,
-    Math.max(
-      1,
-      Math.round(((rows[0] as string).length * targetHeight) / FONT_HEIGHT),
-    ),
-  );
-  const originX = Math.floor((surface.width - targetWidth) / 2);
-  const originY = Math.floor((surface.height - targetHeight) / 2);
-
-  for (let y = 0; y < targetHeight; y++) {
-    const sourceY = Math.floor((y / targetHeight) * FONT_HEIGHT);
-    const row = rows[sourceY] as string;
-    for (let x = 0; x < targetWidth; x++) {
-      const sourceX = Math.floor((x / targetWidth) * row.length);
-      const char = row[sourceX] as string;
-      if (char !== " ") {
-        surface.set(originX + x, originY + y, {
-          char,
-          fg,
-          bg: BG,
-          bold: true,
-        });
-      }
-    }
-  }
-}
-
-function composeTextRows(text: string): readonly string[] {
-  const rows = Array.from({ length: FONT_HEIGHT }, () => "");
-  for (const char of text) {
-    const glyph = FONT[char] as readonly string[];
-    for (let y = 0; y < FONT_HEIGHT; y++) {
-      const glyphRow = glyph[y] as string;
-      rows[y] = `${rows[y]}${glyphRow.replaceAll("#", char)} `;
-    }
-  }
-  return rows.map((row) => row.trimEnd());
-}
+/* Big-glyph banners are composited by the @learn-engine/intents banner intent. */

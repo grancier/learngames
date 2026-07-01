@@ -9,6 +9,7 @@
   "include": ["src"],
   "references": [
     { "path": "../../../packages/core" },
+    { "path": "../../../packages/intents" },
     { "path": "../../../packages/lessons" },
     { "path": "../../../packages/runtime" }
   ]
